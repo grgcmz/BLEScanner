@@ -1,29 +1,21 @@
 package com.grgcmz.blescanner.view
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.Surface
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import timber.log.Timber
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
@@ -46,16 +38,24 @@ class MainActivity : ComponentActivity() {
     }
 
     // Create Permission Handler
-    private val permissionHandler: PermissionHandler = PermissionHandler(this, this)
+    private val permissionHandler: PermissionHandler by lazy { PermissionHandler(this, this)}
 
     // Scanning
     private val bluetoothLeScanner: BluetoothLeScanner by lazy { bluetoothAdapter?.bluetoothLeScanner!! }
 
-    // Stops scanning after 10 seconds.
-    private val SCAN_PERIOD: Long = 10000
-
     //private val leDeviceListAdapter = LeDeviceListAdapter()
     private val scanResults = mutableStateListOf<ScanResult>()
+
+    // Define Scan Settings
+    private val scanSettings = ScanSettings.Builder()
+        .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
+        .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
+        .build()
+
+    private val deviceNameToFilter = "bma_280"
+    private val scanFilters = ScanFilter.Builder()
+        .setDeviceName(deviceNameToFilter)
+        .build()
 
     // Device scan callback.
     private val scanCallback: ScanCallback = object : ScanCallback() {
@@ -70,7 +70,6 @@ class MainActivity : ComponentActivity() {
                     Timber.d("Found BLE device! Name: ${name ?: "Unnamed"}, address: $address")
                 }
                 scanResults.add(result)
-                Timber.d(scanResults.toString())
             }
         }
 
@@ -87,6 +86,7 @@ class MainActivity : ComponentActivity() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
         Timber.d("Activity Created...")
 
         setContent {
@@ -101,8 +101,12 @@ class MainActivity : ComponentActivity() {
         }
 
         Timber.d("Content Set...")
-        entry()
 
+        try {
+            entry()
+        } catch (e: Exception) {
+            Timber.tag(e.toString())
+        }
     }
 
     private fun entry() {
@@ -167,7 +171,12 @@ class MainActivity : ComponentActivity() {
                     ScanButton(
                         isScanning,
                         onClick = {
-                            isScanning = Scanning.scanBleDevices(bluetoothLeScanner, scanCallback, isScanning)
+                            isScanning = Scanning.scanBleDevices(
+                                bluetoothLeScanner = bluetoothLeScanner,
+                                scanFilters = listOf(scanFilters),
+                                scanSettings = scanSettings,
+                                scanCallback = scanCallback,
+                                scanning = isScanning)
                         }
                     )
                 }

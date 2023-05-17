@@ -3,17 +3,27 @@ package com.grgcmz.blescanner.controller
 import android.annotation.SuppressLint
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
-import androidx.compose.runtime.MutableState
-import kotlinx.coroutines.flow.MutableStateFlow
+import android.bluetooth.le.ScanFilter
+import android.bluetooth.le.ScanSettings
 import timber.log.Timber
 
 object Scanning {
 
     @SuppressLint("MissingPermission")
-    fun scanBleDevices(bluetoothLeScanner: BluetoothLeScanner, scanCallback: ScanCallback, scanning: Boolean): Boolean {
+    fun scanBleDevices(
+        bluetoothLeScanner: BluetoothLeScanner,
+        scanFilters: List<ScanFilter>,
+        scanSettings: ScanSettings,
+        scanCallback: ScanCallback,
+        scanning: Boolean
+    ): Boolean {
         if (!scanning) {
             Timber.d("Starting Scan...")
-            bluetoothLeScanner.startScan(scanCallback)
+            bluetoothLeScanner.startScan(
+                scanFilters,
+                scanSettings,
+                scanCallback
+            )
             return true
         } else {
             Timber.d("Stopping Scan...")

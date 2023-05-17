@@ -1,25 +1,23 @@
 package com.grgcmz.blescanner.view.composables
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.grgcmz.blescanner.R
-import com.grgcmz.blescanner.view.MainActivity
+import com.grgcmz.blescanner.model.DeviceModel
+import com.grgcmz.blescanner.model.ScanResultAdapter
 import com.grgcmz.blescanner.view.theme.BLEScannerTheme
+import com.grgcmz.blescanner.controller.utils.toHex
 
 // TODO () Fix card sizing not extending to edge of screen - 16.dp
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DeviceCard(name: String, address: String, rssi: Int, bondState: String) {
+fun DeviceCard(deviceModel: DeviceModel) {
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -52,7 +50,7 @@ fun DeviceCard(name: String, address: String, rssi: Int, bondState: String) {
 
                 Column() {
                     Text(
-                        text = name,
+                        text = deviceModel.name,
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -60,19 +58,35 @@ fun DeviceCard(name: String, address: String, rssi: Int, bondState: String) {
                 // Center Column
                 FlowColumn(
                     modifier = Modifier.fillMaxWidth(),
-                    maxItemsInEachColumn = 3,
+                    //maxItemsInEachColumn = 3,
 
                     ) {
                     Text(
-                        text = address,
+                        text = deviceModel.address,
                         style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        text = "$rssi dBm",
+                        text = "${deviceModel.rssi} dBm",
                         style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        text = bondState,
+                        text = ScanResultAdapter.getBondState(deviceModel.bondState),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        text = "AD Flags: ${deviceModel.advertiseFlags}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    for (pair in deviceModel.parsedBytes){
+                        Text(
+                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
+                            text = "${pair.first}\nValue:  ${pair.second}",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Divider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.onSurface)
+                    }
+                    Text(
+                        text = "RAW Data: ${deviceModel.rawDataBytes.toHex()}",
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -86,7 +100,7 @@ fun DeviceCard(name: String, address: String, rssi: Int, bondState: String) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    BLEScannerTheme() {
-        DeviceCard("Test", "Test", 2, "Test")
-    }
+//    BLEScannerTheme() {
+//        DeviceCard(deviceModel = DeviceModel("Test", "Test", 2, 10, 1, ByteArray(1)))
+//    }
 }

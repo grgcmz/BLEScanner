@@ -7,7 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.grgcmz.blescanner.model.ScanResultAdapter
+import com.grgcmz.blescanner.controller.AdvParser
+import com.grgcmz.blescanner.model.DeviceModel
 
 @SuppressLint("MissingPermission")
 @Composable
@@ -16,11 +17,29 @@ fun DeviceList(result: MutableList<ScanResult>) {
         modifier = Modifier.fillMaxWidth(),
     ) {
         items(result) { result ->
-            DeviceCard(
-                name = result.device.name ?: "Unknown",
-                address = result.device.address ?: "Unknown",
-                rssi = result.rssi ?: 0,
-                bondState = ScanResultAdapter.getbondState(result.device.bondState))
+            val deviceModel = DeviceModel(
+                result.device.name ?: "Unknown",
+                result.device.address ?: "Unknown",
+                result.rssi ?: 0,
+                result.device.bondState,
+                result.scanRecord!!.advertiseFlags,
+                result.scanRecord!!.bytes,
+                AdvParser().parseBytes(result.scanRecord!!.bytes)
+                )
+            DeviceCard(deviceModel)
         }
+//        items(result) { result ->
+//            val deviceModel = DeviceModel(
+//                result.device.name,
+//                result.device.address,
+//                result.rssi,
+//                result.device.bondState
+//            )
+//            ExpandableDeviceCard(
+//                deviceModel = deviceModel,
+//                onCardArrowClick = {/*TODO*/},
+//                expanded = /*TODO*/
+//            )
+//        }
     }
 }
