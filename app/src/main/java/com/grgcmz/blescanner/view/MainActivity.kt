@@ -8,6 +8,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,16 +19,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import timber.log.Timber
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.grgcmz.blescanner.BuildConfig
+import com.grgcmz.blescanner.controller.MultiplePermissionHandler
 import com.grgcmz.blescanner.controller.PermissionHandler
 import com.grgcmz.blescanner.controller.Scanning
 import com.grgcmz.blescanner.view.composables.DeviceList
 import com.grgcmz.blescanner.view.composables.ScanButton
 import com.grgcmz.blescanner.view.theme.BLEScannerTheme
-
 
 class MainActivity : ComponentActivity() {
 
@@ -36,10 +40,9 @@ class MainActivity : ComponentActivity() {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothManager.adapter
     }
-
+    // multiple permission handler asks for coarse location for some reason
     // Create Permission Handler
-    private val permissionHandler: PermissionHandler by lazy { PermissionHandler(this, this)}
-
+    private val multiplePermissionHandler: MultiplePermissionHandler by lazy { MultiplePermissionHandler(this, this)}
     // Scanning
     private val bluetoothLeScanner: BluetoothLeScanner by lazy { bluetoothAdapter?.bluetoothLeScanner!! }
 
@@ -81,6 +84,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // init Timber
         if (BuildConfig.DEBUG) {
@@ -110,7 +114,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun entry() {
-        permissionHandler.checkBlePermissions(bluetoothAdapter)
+        multiplePermissionHandler.checkBlePermissions(bluetoothAdapter)
     }
 
 
@@ -133,11 +137,11 @@ class MainActivity : ComponentActivity() {
                         title = {
                             Text(text = "BLE Devices Nearby")
                         },
-                        navigationIcon = {
-                            IconButton(onClick = {}) {
-                                Icon(Icons.Filled.Menu, "backIcon")
-                            }
-                        },
+//                        navigationIcon = {
+//                            IconButton(onClick = {}) {
+//                                Icon(Icons.Filled.Menu, "backIcon")
+//                            }
+//                        },
                         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                             titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -161,10 +165,17 @@ class MainActivity : ComponentActivity() {
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(10.dp))
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
+                        Box(
+                            modifier = Modifier
+                                .padding(top = 55.dp)
                         ) {
-                            DeviceList(scanResults)
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+
+                                ) {
+                                DeviceList(scanResults)
+                            }
                         }
                     }
 
@@ -173,7 +184,8 @@ class MainActivity : ComponentActivity() {
                         onClick = {
                             isScanning = Scanning.scanBleDevices(
                                 bluetoothLeScanner = bluetoothLeScanner,
-                                scanFilters = listOf(scanFilters),
+                                //scanFilters = listOf(scanFilters),
+                                null,
                                 scanSettings = scanSettings,
                                 scanCallback = scanCallback,
                                 scanning = isScanning)

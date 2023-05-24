@@ -20,7 +20,7 @@ import com.grgcmz.blescanner.controller.utils.toHex
 fun DeviceCard(deviceModel: DeviceModel) {
     Card(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(top = 5.dp, bottom = 5.dp)
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = MaterialTheme.shapes.medium,

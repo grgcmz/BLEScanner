@@ -14,7 +14,7 @@ fun ScanButton(
 ) {
     Button(
         modifier = Modifier
-            .padding(16.dp),
+            .padding(top = 8.dp, bottom = 24.dp),
         onClick = onClick,
         content = {
             // TODO() toggle text

@@ -12,7 +12,7 @@ object Scanning {
     @SuppressLint("MissingPermission")
     fun scanBleDevices(
         bluetoothLeScanner: BluetoothLeScanner,
-        scanFilters: List<ScanFilter>,
+        scanFilters: List<ScanFilter>?,
         scanSettings: ScanSettings,
         scanCallback: ScanCallback,
         scanning: Boolean

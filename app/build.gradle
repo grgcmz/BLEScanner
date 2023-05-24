@@ -71,6 +71,7 @@ dependencies {
 
     // Accompanist
     implementation 'com.google.accompanist:accompanist-permissions:0.29.1-alpha'
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
 
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'

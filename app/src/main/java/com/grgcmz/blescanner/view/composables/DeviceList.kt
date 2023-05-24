@@ -2,6 +2,7 @@ package com.grgcmz.blescanner.view.composables
 
 import android.annotation.SuppressLint
 import android.bluetooth.le.ScanResult
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

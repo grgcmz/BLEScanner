@@ -52,22 +52,36 @@ class MultiplePermissionHandler(
         }
     }
 
+    private val requestBluetoothConnectPermissionLauncher by lazy(LazyThreadSafetyMode.NONE) {
+        activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                Toast.makeText(context, "Bluetooth Connect permission granted", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(context, "Bluetooth Connect permission denied", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
     private val multiplePermissionResultLauncher by lazy(LazyThreadSafetyMode.NONE) {
+
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             // Handle result of permission request
             permissions.entries.forEach { entry ->
-                val permission = entry.key
-                val granted = entry.value
-                if (granted) {
-                    Toast.makeText(context, "$permission permission granted", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(
-                        context,
-                        "$permission is required. Please grant this permission.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+
+//                val permission = entry.key
+//                val granted = entry.value
+//                if (granted) {
+//                    Toast.makeText(context, "$permission permission granted", Toast.LENGTH_SHORT)
+//                        .show()
+//                } else {
+//                    Toast.makeText(
+//                        context,
+//                        "$permission is required. Please grant this permission.",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
             }
         }
     }
@@ -91,6 +105,14 @@ class MultiplePermissionHandler(
             "0"
         } else "1"
 
+        val permissionsStateConnect = if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            "0"
+        } else "1"
+
         val permissionsStateLocation = if (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -99,25 +121,51 @@ class MultiplePermissionHandler(
             "0"
         } else "1"
 
-        val permissionsState: String = permissionsStateScan + permissionsStateLocation
+        val permissionsState: String = permissionsStateConnect + permissionsStateScan + permissionsStateLocation
 
         Timber.d("PermissionsState is $permissionsState")
         // _ _ _ -> FINE_LOCATION, BLUETOOTH_SCAN, BLUETOOTH_CONNECT
         when (permissionsState) {
-            "00" // Connect already granted
-            -> multiplePermissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.BLUETOOTH_SCAN
+            "000" // No permission granted
+                -> multiplePermissionResultLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.BLUETOOTH_SCAN,
+                        Manifest.permission.BLUETOOTH_CONNECT
                 )
             )
-            "01" // Connect and Location already granted
+            "001" // Location already granted
+                -> multiplePermissionResultLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.BLUETOOTH_CONNECT,
+                        Manifest.permission.BLUETOOTH_SCAN
+                    )
+                )
+            "010" // Location already granted
+            -> multiplePermissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                )
+            )
+            "011" // Location already granted
+            -> requestBluetoothConnectPermissionLauncher.launch(
+                Manifest.permission.BLUETOOTH_CONNECT
+            )
+            "100" // Connect already granted
+                -> multiplePermissionResultLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.BLUETOOTH_SCAN
+                )
+            )
+            "101" // Connect and Location already granted
             -> requestBluetoothScanPermissionLauncher.launch(
                 Manifest.permission.BLUETOOTH_SCAN
             )
-            "10" // Connect and Scan already granted
+            "110" // Connect and Scan already granted
             -> requestFineLocationPermissionLauncher.launch(
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
             )
             else -> {
                 //all perms already granted

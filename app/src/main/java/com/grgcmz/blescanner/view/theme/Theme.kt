@@ -5,8 +5,10 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 private val DarkColorPalette = darkColorScheme(
@@ -75,8 +77,18 @@ fun BLEScannerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compos
         useDynamicColors && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
         darkTheme -> DarkColorPalette
         else -> LightColorPalette
-
     }
+
+    val usesLightTheme: Boolean = !isSystemInDarkTheme()
+    val systemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setStatusBarColor(
+            color = Color.Transparent,
+            darkIcons = usesLightTheme)
+        systemUiController.setNavigationBarColor(
+            color = Color.Transparent)
+    }
+
 
 /*val colors = if (darkTheme) {
         DarkColorPalette

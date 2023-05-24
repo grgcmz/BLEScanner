@@ -28,8 +28,14 @@ class AdvParser (){
 
     private fun decodeData(type: String, data: String): Pair<String, String>{
         return when (type) {
-            "FF" ->
-                Pair("Manufacturer Specific Data", "0x$data")
+            "FF" -> {
+                //Pair("Manufacturer Specific Data", "0x$data")
+                val temperature: String = data.drop(4)
+                Pair(
+                    "Manufacturer Specific Data",
+                    MeasurementCompensation().compensateTemperature(temperature).toString()
+                )
+            }
             "01" ->
                 Pair("Flags", "0x$data")
             "02" ->
@@ -49,7 +55,6 @@ class AdvParser (){
             }
             "09" -> {
                 Pair("Complete Local Name", data.decodeHex())
-
             }
             "0A" ->
                 Pair("Tx Power Level", "0x$data")
