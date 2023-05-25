@@ -7,9 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
 import timber.log.Timber
 
@@ -70,18 +68,18 @@ class MultiplePermissionHandler(
             // Handle result of permission request
             permissions.entries.forEach { entry ->
 
-//                val permission = entry.key
-//                val granted = entry.value
-//                if (granted) {
-//                    Toast.makeText(context, "$permission permission granted", Toast.LENGTH_SHORT)
-//                        .show()
-//                } else {
-//                    Toast.makeText(
-//                        context,
-//                        "$permission is required. Please grant this permission.",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
+                val permission = entry.key
+                val granted = entry.value
+                if (granted) {
+                    Toast.makeText(context, "$permission permission granted", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "$permission is required. Please grant this permission.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }

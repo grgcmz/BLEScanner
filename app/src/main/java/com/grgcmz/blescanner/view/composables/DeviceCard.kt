@@ -3,16 +3,15 @@ package com.grgcmz.blescanner.view.composables
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.grgcmz.blescanner.R
+import com.grgcmz.blescanner.controller.utils.toHex
 import com.grgcmz.blescanner.model.DeviceModel
 import com.grgcmz.blescanner.model.ScanResultAdapter
 import com.grgcmz.blescanner.view.theme.BLEScannerTheme
-import com.grgcmz.blescanner.controller.utils.toHex
 
 // TODO () Fix card sizing not extending to edge of screen - 16.dp
 @OptIn(ExperimentalLayoutApi::class)
@@ -32,23 +31,29 @@ fun DeviceCard(deviceModel: DeviceModel) {
             modifier = Modifier.padding(8.dp)
         ) {
             // Left Icon column
-            Column(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(horizontal = 4.dp)
-                    .fillMaxWidth(0.15f),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_bluetooth_24),
-                    contentDescription = "Bluetooth Icon"
-                )
-            }
+//            Column(
+//                modifier = Modifier
+//                    .align(Alignment.CenterVertically)
+//                    .padding(horizontal = 4.dp)
+//                    .fillMaxWidth(0.15f),
+//                verticalArrangement = Arrangement.Center,
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Icon(
+//                    painter = painterResource(id = R.drawable.baseline_bluetooth_24),
+//                    contentDescription = "Bluetooth Icon"
+//                )
+//            }
 
             Column() {
 
-                Column() {
+                Row() {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_bluetooth_24),
+                        contentDescription = "Bluetooth Icon",
+                        modifier = Modifier.offset(y = 4.dp)
+
+                    )
                     Text(
                         text = deviceModel.name,
                         style = MaterialTheme.typography.titleSmall,
@@ -97,10 +102,22 @@ fun DeviceCard(deviceModel: DeviceModel) {
     }
 }
 
+@Composable
+fun PopUpInfo() {
+    Text(text = "Test")
+}
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-//    BLEScannerTheme() {
-//        DeviceCard(deviceModel = DeviceModel("Test", "Test", 2, 10, 1, ByteArray(1)))
-//    }
+    BLEScannerTheme() {
+        DeviceCard(deviceModel = DeviceModel(
+            "Test",
+            "Test",
+            2,
+            10,
+            1,
+            ByteArray(10),
+            listOf(Pair("Test", "Test"))
+        ))
+    }
 }

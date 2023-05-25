@@ -1,7 +1,7 @@
 package com.grgcmz.blescanner.controller
 
-import com.grgcmz.blescanner.controller.utils.toHex
 import com.grgcmz.blescanner.controller.utils.decodeHex
+import com.grgcmz.blescanner.controller.utils.toHex
 
 class AdvParser (){
 
@@ -29,12 +29,13 @@ class AdvParser (){
     private fun decodeData(type: String, data: String): Pair<String, String>{
         return when (type) {
             "FF" -> {
-                //Pair("Manufacturer Specific Data", "0x$data")
-                val temperature: String = data.drop(4)
-                Pair(
-                    "Manufacturer Specific Data",
-                    MeasurementCompensation().compensateTemperature(temperature).toString()
-                )
+                Pair("Manufacturer Specific Data", "0x$data")
+                // TODO() fix this stuff
+//                val temperature: String = data.drop(4)
+//                Pair(
+//                    "Manufacturer Specific Data",
+//                    calculateTemp(temperature).toString()
+//                )
             }
             "01" ->
                 Pair("Flags", "0x$data")
