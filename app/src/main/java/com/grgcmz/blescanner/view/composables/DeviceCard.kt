@@ -102,22 +102,19 @@ fun DeviceCard(deviceModel: DeviceModel) {
     }
 }
 
-@Composable
-fun PopUpInfo() {
-    Text(text = "Test")
-}
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     BLEScannerTheme() {
-        DeviceCard(deviceModel = DeviceModel(
-            "Test",
-            "Test",
-            2,
-            10,
-            1,
-            ByteArray(10),
-            listOf(Pair("Test", "Test"))
-        ))
+        DeviceCard(
+            deviceModel = DeviceModel(
+                "Test",
+                "Test",
+                2,
+                10,
+                1,
+                ByteArray(10),
+                listOf(Pair("Test", "Test")))
+        )
     }
 }

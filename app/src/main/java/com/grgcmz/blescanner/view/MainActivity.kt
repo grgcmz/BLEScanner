@@ -65,6 +65,7 @@ class MainActivity : ComponentActivity() {
                     Timber.d("Found BLE device! Name: ${name ?: "Unnamed"}, address: $address")
                 }
                 scanResults.add(result)
+
             }
         }
 
@@ -130,11 +131,6 @@ class MainActivity : ComponentActivity() {
                         title = {
                             Text(text = "BLE Devices Nearby")
                         },
-//                        navigationIcon = {
-//                            IconButton(onClick = {}) {
-//                                Icon(Icons.Filled.Menu, "backIcon")
-//                            }
-//                        },
                         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                             titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )

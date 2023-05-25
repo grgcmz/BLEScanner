@@ -17,18 +17,18 @@ object Scanning {
         scanCallback: ScanCallback,
         scanning: Boolean
     ): Boolean {
-        if (!scanning) {
+        return if (!scanning) {
             Timber.d("Starting Scan...")
             bluetoothLeScanner.startScan(
                 scanFilters,
                 scanSettings,
                 scanCallback
             )
-            return true
+            true
         } else {
             Timber.d("Stopping Scan...")
             bluetoothLeScanner.stopScan(scanCallback)
-            return false
+            false
         }
     }
 }
