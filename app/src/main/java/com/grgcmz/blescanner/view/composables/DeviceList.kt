@@ -20,11 +20,11 @@ fun DeviceList(result: MutableList<ScanResult>) {
             val deviceModel = DeviceModel(
                 name = result.device.name ?: "Unknown",
                 address = result.device.address ?: "Unknown",
-                rssi = result.rssi ?: 0,
+                rssi = result.rssi,
                 bondState = result.device.bondState,
                 advertiseFlags = result.scanRecord!!.advertiseFlags,
                 rawDataBytes = result.scanRecord!!.bytes,
-                parsedBytes = AdvParser().parseBytes(result.scanRecord!!.bytes))
+                parsedBytes = AdvParser().parseBytes(result.scanRecord!!.bytes, result.device.name ?: "Unknown"))
             ExpandableDeviceCard(deviceModel = deviceModel)
         }
     }

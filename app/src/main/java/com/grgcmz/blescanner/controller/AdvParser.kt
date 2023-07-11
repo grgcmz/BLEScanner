@@ -1,12 +1,14 @@
 package com.grgcmz.blescanner.controller
 
+import com.grgcmz.blescanner.controller.utils.calculateTemp
 import com.grgcmz.blescanner.controller.utils.decodeHex
+import com.grgcmz.blescanner.controller.utils.hexToTemp
 import com.grgcmz.blescanner.controller.utils.toHex
 
 class AdvParser (){
 
     @OptIn(ExperimentalUnsignedTypes::class)
-    fun parseBytes(bytes: ByteArray): List<Pair<String, String>>{
+    fun parseBytes(bytes: ByteArray, deviceName: String): List<Pair<String, String>>{
             var bytesInHex: String = bytes.toHex().drop(2) //convert to hex String and drop 0x
 
             val parsedBytes = mutableListOf<Pair<String, String>>()
@@ -20,22 +22,17 @@ class AdvParser (){
                 bytesInHex = bytesInHex.drop(2)
                 val data = bytesInHex.take(len*2-2) // length is in bytes -> 1 byte == 2 Hex Values
                 bytesInHex = bytesInHex.drop(len*2-2)
-                parsedBytes.add(decodeData(type, data))
+                parsedBytes.add(decodeData(type, data, deviceName))
             }
 
             return parsedBytes
     }
 
-    private fun decodeData(type: String, data: String): Pair<String, String>{
+    private fun decodeData(type: String, data: String, deviceName: String): Pair<String, String>{
         return when (type) {
             "FF" -> {
-                Pair("Manufacturer Specific Data", "0x$data")
-                // TODO() fix this stuff
-//                val temperature: String = data.drop(4)
-//                Pair(
-//                    "Manufacturer Specific Data",
-//                    calculateTemp(temperature).toString()
-//                )
+                val decodedData = decodeManSpecData(data, deviceName)
+                Pair ("Manufacturer Specific Data", decodedData)
             }
             "01" ->
                 Pair("Flags", "0x$data")
@@ -68,75 +65,89 @@ class AdvParser (){
             "10" ->
                 Pair("Device ID", "0x$data") // TODO() Check why this is double here https://btprodspecificationrefs.blob.core.windows.net/assigned-numbers/Assigned%20Number%20Types/Assigned_Numbers.pdf
             "11" ->
-                Pair("", "0x$data")
+                Pair("Security Manager Out of Band Flags", "0x$data")
             "12" ->
-                Pair("", "0x$data")
+                Pair("Peripheral Connection Interval Range", "0x$data")
             "14" ->
-                Pair("", "0x$data")
+                Pair("List of 16-bit Service Solicitation UUIDs", "0x$data")
             "15" ->
-                Pair("", "0x$data")
+                Pair("List of 128-bit Service Solicitation UUIDs", "0x$data")
+            "16" ->
+                Pair("Service Data - 16-bit UUID ", "0x$data")
+            "17" ->
+                Pair("Public Target Address", "0x$data")
             "18" ->
-                Pair("", "0x$data")
+                Pair("Random Target Address", "0x$data")
             "19" ->
-                Pair("", "0x$data")
+                Pair("Appearance", "0x$data")
             "1A" ->
-                Pair("", "0x$data")
+                Pair("Advertising Interval", "0x$data")
             "1B" ->
-                Pair("", "0x$data")
+                Pair("LE Bluetooth Device Address", "0x$data")
             "1C" ->
-                Pair("", "0x$data")
+                Pair("LE Role", "0x$data")
             "1D" ->
-                Pair("", "0x$data")
+                Pair("Simple Pairing Hash C-256", "0x$data")
             "1E" ->
-                Pair("", "0x$data")
+                Pair("Simple Pairing Randomizer R-256", "0x$data")
             "1F" ->
-                Pair("", "0x$data")
+                Pair("List of 32-bit Service Solicitation UUIDs", "0x$data")
             "20" ->
-                Pair("", "0x$data")
+                Pair("Service Data - 32-bit UUID", "0x$data")
             "21" ->
-                Pair("", "0x$data")
+                Pair("Service Data - 128-bit UUID", "0x$data")
             "22" ->
-                Pair("", "0x$data")
+                Pair("LE Secure Connections Confirmation Value", "0x$data")
             "23" ->
-                Pair("", "0x$data")
+                Pair("LE Secure Connections Random Value", "0x$data")
             "24" ->
-                Pair("", "0x$data")
+                Pair("URI", "0x$data")
             "25" ->
-                Pair("", "0x$data")
+                Pair("Indoor Positioning", "0x$data")
             "26" ->
-                Pair("", "0x$data")
+                Pair("Transport Discovery Data", "0x$data")
             "27" ->
-                Pair("", "0x$data")
+                Pair("LE Supported Features ", "0x$data")
             "28" ->
-                Pair("", "0x$data")
+                Pair("Channel Map Update Indication ", "0x$data")
             "29" ->
-                Pair("", "0x$data")
+                Pair("PB-ADV", "0x$data")
             "2A" ->
-                Pair("", "0x$data")
+                Pair("Mesh Message", "0x$data")
             "2B" ->
-                Pair("", "0x$data")
+                Pair("Mesh Beacon", "0x$data")
             "2C" ->
-                Pair("", "0x$data")
+                Pair("BIGInfo", "0x$data")
             "2D" ->
-                Pair("", "0x$data")
+                Pair("Broadcast_Code", "0x$data")
             "2E" ->
-                Pair("", "0x$data")
+                Pair("Resolvable Set Identifier ", "0x$data")
             "2F" ->
-                Pair("", "0x$data")
+                Pair("Advertising Interval - long", "0x$data")
             "30" ->
-                Pair("", "0x$data")
+                Pair("Broadcast_Name", "0x$data")
             "31" ->
-                Pair("", "0x$data")
+                Pair("Encrypted Advertising Data", "0x$data")
             "32" ->
-                Pair("", "0x$data")
+                Pair("Periodic Advertising Response Timing Information", "0x$data")
             "34" ->
-                Pair("", "0x$data")
+                Pair("Electronic Shelf Label", "0x$data")
             "3D" ->
-                Pair("", "0x$data")
+                Pair("3D Information Data", "0x$data")
 
             else -> {
-                Pair("AD Type: $type", data)
+                Pair("Unrecognized Type: $type", data)
             }
+        }
+    }
+
+    private fun decodeManSpecData(data: String, deviceName: String): String {
+
+        return if (deviceName == "MS1089") {
+            val temperature = data.drop(4).hexToTemp()
+            "$temperature °C"
+        } else {
+            "0x$data"
         }
     }
 }

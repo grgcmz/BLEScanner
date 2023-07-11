@@ -22,3 +22,9 @@ fun String.decodeHex(): String {
         .toByteArray()
         .toString(Charsets.UTF_8)
 }
+
+fun String.hexToTemp(): String {
+    val uncompTemp = this.toInt(radix = 16)
+    val compTemp: Double = uncompTemp.toDouble() / 40.0 - 80.0
+    return ((compTemp * 10.0).toLong() / 10.0).toString()
+}

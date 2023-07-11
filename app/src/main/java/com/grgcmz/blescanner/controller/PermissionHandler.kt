@@ -71,12 +71,12 @@ class PermissionHandler (private val activity: ComponentActivity, private val co
         }
 
         // Check if Bluetooth is supported on the device
-        if (bluetoothAdapter == null) {
+        /*if (bluetoothAdapter == null) {
             Timber.e("Bluetooth Adapter unavailable")
             Toast.makeText(context, "Bluetooth is not supported on this device", Toast.LENGTH_SHORT)
                 .show()
             activity.finish() //Crash if not turned on TODO() make this more elegant
-        }
+        }*/
 
         // Request Fine Location Permission
         if (ContextCompat.checkSelfPermission(

@@ -34,7 +34,9 @@ class MainActivity : ComponentActivity() {
     }
     // multiple permission handler asks for coarse location for some reason
     // Create Permission Handler
-    private val multiplePermissionHandler: MultiplePermissionHandler by lazy { MultiplePermissionHandler(this, this)}
+    private val multiplePermissionHandler: MultiplePermissionHandler by lazy {
+        MultiplePermissionHandler(this, this)
+    }
     // Scanning
     private val bluetoothLeScanner: BluetoothLeScanner by lazy { bluetoothAdapter?.bluetoothLeScanner!! }
 
@@ -47,7 +49,7 @@ class MainActivity : ComponentActivity() {
         .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
         .build()
 
-    private val deviceNameToFilter = "bma_280"
+    private val deviceNameToFilter = "MS1089"
     private val scanFilters = ScanFilter.Builder()
         .setDeviceName(deviceNameToFilter)
         .build()
@@ -169,8 +171,8 @@ class MainActivity : ComponentActivity() {
                         onClick = {
                             isScanning = Scanning.scanBleDevices(
                                 bluetoothLeScanner = bluetoothLeScanner,
-                                //scanFilters = listOf(scanFilters),
-                                null,
+                                scanFilters = listOf(scanFilters),
+                                //null,
                                 scanSettings = scanSettings,
                                 scanCallback = scanCallback,
                                 scanning = isScanning)
