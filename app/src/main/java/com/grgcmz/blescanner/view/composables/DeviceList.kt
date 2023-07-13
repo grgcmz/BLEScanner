@@ -10,6 +10,11 @@ import androidx.compose.ui.Modifier
 import com.grgcmz.blescanner.controller.AdvParser
 import com.grgcmz.blescanner.model.DeviceModel
 
+/**
+ * Composable function for rendering a list of devices.
+ *
+ * @param result The list of scan results representing the devices.
+ */
 @SuppressLint("MissingPermission")
 @Composable
 fun DeviceList(result: MutableList<ScanResult>) {

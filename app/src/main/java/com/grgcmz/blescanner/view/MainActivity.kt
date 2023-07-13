@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         bluetoothManager.adapter
     }
 
-    // Create Permission Handler
+    // Create Multiple Permission Handler to handle all the required permissions
     private val multiplePermissionHandler: MultiplePermissionHandler by lazy {
         MultiplePermissionHandler(this, this)
     }
@@ -77,6 +77,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // On create function
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -88,6 +89,7 @@ class MainActivity : ComponentActivity() {
 
         Timber.d("Activity Created...")
 
+        // Set the content to the ble scanner theme starting with the Scanning Screen
         setContent {
             BLEScannerTheme {
                 Surface(
@@ -108,11 +110,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
+    // Entry point for permission checks
     private fun entry() {
         multiplePermissionHandler.checkBlePermissions(bluetoothAdapter)
     }
 
 
+    // Scanning Screen Composable
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun ScanningScreen() {
@@ -124,8 +129,8 @@ class MainActivity : ComponentActivity() {
                 .padding(10.dp),
             color = MaterialTheme.colorScheme.background
         ) {
+            // Scaffold as outermost on screen
             Scaffold(
-                //contentAlignment = Alignment.TopCenter,
                 modifier = Modifier
                     .fillMaxSize(),
                 topBar = {
@@ -139,6 +144,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             ) {
+                // Order UI Elements in a column
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(paddingValues = it)
@@ -151,6 +157,7 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
 
                         ) {
+                        // Box containing a Column with the Devices
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -165,11 +172,13 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+                    // Bottom Row containing two buttons
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
+                        // Clear Results Button
                         Button(
                             modifier = Modifier
                                 .padding(top = 8.dp, bottom = 24.dp),
@@ -179,6 +188,7 @@ class MainActivity : ComponentActivity() {
                                 Text("Clear Results")
                             }
                         )
+                        // Start/Stop Scanning Button
                         ScanButton(
                             isScanning,
                             onClick = {
@@ -198,6 +208,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // Preview Scanning Screen for Emulator
     @Preview(showBackground = true)
     @Composable
     fun DefaultPreview() {

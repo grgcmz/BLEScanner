@@ -11,6 +11,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import timber.log.Timber
 
+/**
+ * Handler class for handling multiple permissions related to Bluetooth and Location.
+ *
+ * @property activity The ComponentActivity instance.
+ * @property context The Context instance.
+ */
 class MultiplePermissionHandler(
     private val activity: ComponentActivity,
     private val context: Context
@@ -83,6 +89,12 @@ class MultiplePermissionHandler(
             }
         }
     }
+
+    /**
+     * Checks the BLE-related permissions and requests them if necessary.
+     *
+     * @param bluetoothAdapter The BluetoothAdapter instance.
+     */
 
     fun checkBlePermissions(bluetoothAdapter: BluetoothAdapter?) {
         Timber.d("Checking permissions...")

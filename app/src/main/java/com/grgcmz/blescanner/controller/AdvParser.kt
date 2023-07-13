@@ -1,12 +1,21 @@
 package com.grgcmz.blescanner.controller
 
-import com.grgcmz.blescanner.controller.utils.calculateTemp
 import com.grgcmz.blescanner.controller.utils.decodeHex
 import com.grgcmz.blescanner.controller.utils.hexToTemp
 import com.grgcmz.blescanner.controller.utils.toHex
 
+/**
+ * Class responsible for parsing advertising data received from BLE devices.
+ */
 class AdvParser (){
 
+    /**
+     * Parses the byte array of advertising data and returns a list of key-value pairs representing the parsed data.
+     *
+     * @param bytes The byte array of advertising data.
+     * @param deviceName The name of the device emitting the advertising data.
+     * @return A list of key-value pairs representing the parsed advertising data.
+     */
     @OptIn(ExperimentalUnsignedTypes::class)
     fun parseBytes(bytes: ByteArray, deviceName: String): List<Pair<String, String>>{
             var bytesInHex: String = bytes.toHex().drop(2) //convert to hex String and drop 0x
@@ -28,6 +37,14 @@ class AdvParser (){
             return parsedBytes
     }
 
+    /**
+     * Decodes a specific type of advertising data based on the provided type and data.
+     *
+     * @param type The type of advertising data to decode.
+     * @param data The data to be decoded.
+     * @param deviceName The name of the device emitting the advertising data.
+     * @return A key-value pair representing the decoded advertising data.
+     */
     private fun decodeData(type: String, data: String, deviceName: String): Pair<String, String>{
         return when (type) {
             "FF" -> {
@@ -141,6 +158,14 @@ class AdvParser (){
         }
     }
 
+    /**
+     * Decodes manufacturer-specific data based on the provided data and device name. In case of
+     * the name being MS1089, the temperature is calculated from the manufacturer-specific data.
+     *
+     * @param data The manufacturer-specific data to decode.
+     * @param deviceName The name of the device emitting the advertising data.
+     * @return The decoded manufacturer-specific data as a string.
+     */
     private fun decodeManSpecData(data: String, deviceName: String): String {
 
         return if (deviceName == "MS1089") {

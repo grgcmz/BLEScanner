@@ -13,7 +13,11 @@ import com.grgcmz.blescanner.model.DeviceModel
 import com.grgcmz.blescanner.model.ScanResultAdapter
 import com.grgcmz.blescanner.view.theme.BLEScannerTheme
 
-// TODO () Fix card sizing not extending to edge of screen - 16.dp
+/**
+ * Composable function for rendering a device card.
+ *
+ * @param deviceModel The device model representing the device.
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DeviceCard(deviceModel: DeviceModel) {
@@ -30,20 +34,6 @@ fun DeviceCard(deviceModel: DeviceModel) {
         Row(
             modifier = Modifier.padding(8.dp)
         ) {
-            // Left Icon column
-//            Column(
-//                modifier = Modifier
-//                    .align(Alignment.CenterVertically)
-//                    .padding(horizontal = 4.dp)
-//                    .fillMaxWidth(0.15f),
-//                verticalArrangement = Arrangement.Center,
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.baseline_bluetooth_24),
-//                    contentDescription = "Bluetooth Icon"
-//                )
-//            }
 
             Column() {
 
@@ -63,8 +53,6 @@ fun DeviceCard(deviceModel: DeviceModel) {
                 // Center Column
                 FlowColumn(
                     modifier = Modifier.fillMaxWidth(),
-                    //maxItemsInEachColumn = 3,
-
                     ) {
                     Text(
                         text = deviceModel.address,
@@ -96,8 +84,6 @@ fun DeviceCard(deviceModel: DeviceModel) {
                     )
                 }
             }
-            // Right connection Button
-            // TODO()
         }
     }
 }

@@ -43,6 +43,11 @@ import com.grgcmz.blescanner.controller.utils.toHex
 import com.grgcmz.blescanner.model.DeviceModel
 import com.grgcmz.blescanner.model.ScanResultAdapter
 
+/**
+ * Composable function for rendering an expandable device card.
+ *
+ * @param deviceModel The device model containing the data to display in the card.
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ExpandableDeviceCard(

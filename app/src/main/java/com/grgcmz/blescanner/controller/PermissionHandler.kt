@@ -11,6 +11,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import timber.log.Timber
 
+@Deprecated("This class is deprecated and it's not needed anymore. Use MultiplePermissionHandler instead, since bluetooth requires multiple permissions in any case. ")
+/**
+ * [Deprecated] Handler class for handling permissions related to Bluetooth and Location.
+ *
+ * @property activity The ComponentActivity instance.
+ * @property context The Context instance.
+ */
 class PermissionHandler (private val activity: ComponentActivity, private val context: Context){
 
     // Activity Result API call to check if bluetooth is enabled
@@ -57,6 +64,13 @@ class PermissionHandler (private val activity: ComponentActivity, private val co
         }
     }
 
+    /**
+     * [Deprecated] Checks the BLE-related permissions and requests them if necessary.
+     *
+     * @param bluetoothAdapter The BluetoothAdapter instance.
+     */
+    @Deprecated("This method is deprecated. Use checkBlePermissions() in MultiplePermissionHandler instead.")
+
     fun checkBlePermissions(bluetoothAdapter: BluetoothAdapter?) {
         Timber.d("Checking permissions...")
 
@@ -66,17 +80,7 @@ class PermissionHandler (private val activity: ComponentActivity, private val co
             Toast.makeText(context, "Please turn on Bluetooth and try again.", Toast.LENGTH_SHORT)
                 .show()
             this.activity.finish() // TODO() make this more elegant and don't just crash
-//            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-//            requestEnableBtLauncher.launch(enableBtIntent)
         }
-
-        // Check if Bluetooth is supported on the device
-        /*if (bluetoothAdapter == null) {
-            Timber.e("Bluetooth Adapter unavailable")
-            Toast.makeText(context, "Bluetooth is not supported on this device", Toast.LENGTH_SHORT)
-                .show()
-            activity.finish() //Crash if not turned on TODO() make this more elegant
-        }*/
 
         // Request Fine Location Permission
         if (ContextCompat.checkSelfPermission(

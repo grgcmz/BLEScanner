@@ -1,5 +1,16 @@
 package com.grgcmz.blescanner.model
 
+/**
+ * Represents a device model with its properties.
+ *
+ * @property name The name of the device. Default value is "Unknown".
+ * @property address The address of the device. Default value is "Unknown".
+ * @property rssi The RSSI (Received Signal Strength Indication) of the device. Default value is 0.
+ * @property bondState The bond state of the device.
+ * @property advertiseFlags The advertise flags of the device.
+ * @property rawDataBytes The raw data bytes of the device.
+ * @property parsedBytes The parsed bytes of the device as a list of pairs, where each pair represents a key-value pair.
+ */
 data class DeviceModel(
     val name: String = "Unknown",
     val address: String = "Unknown",
@@ -9,6 +20,12 @@ data class DeviceModel(
     val rawDataBytes: ByteArray,
     val parsedBytes: List<Pair<String, String>>,
 ) {
+    /**
+     * Checks if this [DeviceModel] is equal to another object.
+     *
+     * @param other The other object to compare.
+     * @return `false` if the objects are not equal, `true` otherwise.
+     */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -26,6 +43,11 @@ data class DeviceModel(
         return true
     }
 
+    /**
+     * Generates a hash code for this DeviceModel.
+     *
+     * @return The hash code value.
+     */
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + address.hashCode()
