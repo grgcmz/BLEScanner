@@ -2,6 +2,7 @@ package com.grgcmz.blescanner.model
 
 import com.grgcmz.blescanner.R
 
+// Class will be used in the future for further functionality
 enum class ScanFilterOption{
     NAME
 }

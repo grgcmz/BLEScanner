@@ -32,15 +32,15 @@ class MainActivity : ComponentActivity() {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothManager.adapter
     }
-    // multiple permission handler asks for coarse location for some reason
+
     // Create Permission Handler
     private val multiplePermissionHandler: MultiplePermissionHandler by lazy {
         MultiplePermissionHandler(this, this)
     }
+
     // Scanning
     private val bluetoothLeScanner: BluetoothLeScanner by lazy { bluetoothAdapter?.bluetoothLeScanner!! }
 
-    //private val leDeviceListAdapter = LeDeviceListAdapter()
     private val scanResults = mutableStateListOf<ScanResult>()
 
     // Define Scan Settings
@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
         .setDeviceName(deviceNameToFilter)
         .build()
 
-    // Device scan callback.
+    // Device scan Callback
     private val scanCallback: ScanCallback = object : ScanCallback() {
 
         @SuppressLint("MissingPermission")
@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
         Timber.d("Activity Created...")
 
         setContent {
-            BLEScannerTheme() {
+            BLEScannerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -118,18 +118,18 @@ class MainActivity : ComponentActivity() {
     fun ScanningScreen() {
         var isScanning: Boolean by remember { mutableStateOf(false) }
 
-        Surface (
+        Surface(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(10.dp),
             color = MaterialTheme.colorScheme.background
         ) {
-            Scaffold (
+            Scaffold(
                 //contentAlignment = Alignment.TopCenter,
                 modifier = Modifier
                     .fillMaxSize(),
                 topBar = {
-                    CenterAlignedTopAppBar (
+                    CenterAlignedTopAppBar(
                         title = {
                             Text(text = "BLE Devices Nearby")
                         },
@@ -165,19 +165,34 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-
-                    ScanButton(
-                        isScanning,
-                        onClick = {
-                            isScanning = Scanning.scanBleDevices(
-                                bluetoothLeScanner = bluetoothLeScanner,
-                                scanFilters = listOf(scanFilters),
-                                //null,
-                                scanSettings = scanSettings,
-                                scanCallback = scanCallback,
-                                scanning = isScanning)
-                        }
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Button(
+                            modifier = Modifier
+                                .padding(top = 8.dp, bottom = 24.dp),
+                            onClick = { scanResults.clear() },
+                            content = {
+                                // TODO() toggle text
+                                Text("Clear Results")
+                            }
+                        )
+                        ScanButton(
+                            isScanning,
+                            onClick = {
+                                isScanning = Scanning.scanBleDevices(
+                                    bluetoothLeScanner = bluetoothLeScanner,
+                                    //scanFilters = listOf(scanFilters),
+                                    null,
+                                    scanSettings = scanSettings,
+                                    scanCallback = scanCallback,
+                                    scanning = isScanning
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -186,7 +201,7 @@ class MainActivity : ComponentActivity() {
     @Preview(showBackground = true)
     @Composable
     fun DefaultPreview() {
-        BLEScannerTheme() {
+        BLEScannerTheme {
             ScanningScreen()
         }
     }
