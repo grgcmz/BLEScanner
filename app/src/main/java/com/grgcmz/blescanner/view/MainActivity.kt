@@ -22,6 +22,8 @@ import com.grgcmz.blescanner.controller.MultiplePermissionHandler
 import com.grgcmz.blescanner.controller.Scanning
 import com.grgcmz.blescanner.view.composables.DeviceList
 import com.grgcmz.blescanner.view.composables.ScanButton
+import com.grgcmz.blescanner.view.composables.TemperatureCard
+import com.grgcmz.blescanner.view.composables.TemperatureDisplay
 import com.grgcmz.blescanner.view.theme.BLEScannerTheme
 import timber.log.Timber
 
@@ -168,7 +170,7 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxWidth(),
 
                                 ) {
-                                DeviceList(scanResults)
+                                TemperatureDisplay(scanResults)
                             }
                         }
                     }

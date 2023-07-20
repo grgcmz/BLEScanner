@@ -12,29 +12,52 @@ class AdvParser (){
     /**
      * Parses the byte array of advertising data and returns a list of key-value pairs representing the parsed data.
      *
+     * @param mode An Int value for the mode: 1 for normal parsing, 2 for temperature only
      * @param bytes The byte array of advertising data.
      * @param deviceName The name of the device emitting the advertising data.
      * @return A list of key-value pairs representing the parsed advertising data.
      */
     @OptIn(ExperimentalUnsignedTypes::class)
-    fun parseBytes(bytes: ByteArray, deviceName: String): List<Pair<String, String>>{
+    fun parseBytes(mode: Int, bytes: ByteArray, deviceName: String): List<Pair<String, String>> {
+        if (mode == 1) {
             var bytesInHex: String = bytes.toHex().drop(2) //convert to hex String and drop 0x
 
             val parsedBytes = mutableListOf<Pair<String, String>>()
 
             //val bytesIterator = bytesInHex.iterator()
-            while(bytesInHex.isNotEmpty()) {
+            while (bytesInHex.isNotEmpty()) {
                 val len: Int = bytesInHex.take(2).toInt(16)
-                if(len == 0) break //break if length is 0
+                if (len == 0) break //break if length is 0
                 bytesInHex = bytesInHex.drop(2)
                 val type = bytesInHex.take(2)
                 bytesInHex = bytesInHex.drop(2)
-                val data = bytesInHex.take(len*2-2) // length is in bytes -> 1 byte == 2 Hex Values
-                bytesInHex = bytesInHex.drop(len*2-2)
+                val data =
+                    bytesInHex.take(len * 2 - 2) // length is in bytes -> 1 byte == 2 Hex Values
+                bytesInHex = bytesInHex.drop(len * 2 - 2)
                 parsedBytes.add(decodeData(type, data, deviceName))
             }
 
             return parsedBytes
+        } else {
+            var bytesInHex: String = bytes.toHex().drop(2) //convert to hex String and drop 0x
+
+            val parsedBytes = mutableListOf<Pair<String, String>>()
+
+            //val bytesIterator = bytesInHex.iterator()
+            while (bytesInHex.isNotEmpty()) {
+                val len: Int = bytesInHex.take(2).toInt(16)
+                if (len == 0) break //break if length is 0
+                bytesInHex = bytesInHex.drop(2)
+                val type = bytesInHex.take(2)
+                bytesInHex = bytesInHex.drop(2)
+                val data =
+                    bytesInHex.take(len * 2 - 2) // length is in bytes -> 1 byte == 2 Hex Values
+                bytesInHex = bytesInHex.drop(len * 2 - 2)
+                parsedBytes.add(getTemperature(type, data, deviceName))
+            }
+
+            return parsedBytes
+        }
     }
 
     /**
@@ -157,6 +180,19 @@ class AdvParser (){
             }
         }
     }
+
+
+    private fun getTemperature(type: String, data: String, deviceName: String): Pair<String, String>{
+        return when (type) {
+            "FF" -> {
+                val decodedData = decodeManSpecData(data, deviceName)
+                Pair ("Manufacturer Specific Data", decodedData)
+            }
+
+            else -> {Pair("","")}
+        }
+    }
+
 
     /**
      * Decodes manufacturer-specific data based on the provided data and device name. In case of

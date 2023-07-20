@@ -29,8 +29,9 @@ fun DeviceList(result: MutableList<ScanResult>) {
                 bondState = result.device.bondState,
                 advertiseFlags = result.scanRecord!!.advertiseFlags,
                 rawDataBytes = result.scanRecord!!.bytes,
-                parsedBytes = AdvParser().parseBytes(result.scanRecord!!.bytes, result.device.name ?: "Unknown"))
+                parsedBytes = AdvParser().parseBytes(1, result.scanRecord!!.bytes, result.device.name ?: "Unknown"))
             ExpandableDeviceCard(deviceModel = deviceModel)
         }
     }
 }
+
