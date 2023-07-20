@@ -194,8 +194,7 @@ class MainActivity : ComponentActivity() {
                             onClick = {
                                 isScanning = Scanning.scanBleDevices(
                                     bluetoothLeScanner = bluetoothLeScanner,
-                                    //scanFilters = listOf(scanFilters),
-                                    null,
+                                    scanFilters = listOf(scanFilters),
                                     scanSettings = scanSettings,
                                     scanCallback = scanCallback,
                                     scanning = isScanning
