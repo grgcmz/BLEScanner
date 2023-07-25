@@ -1,7 +1,7 @@
 package com.grgcmz.blescanner.model
 
 /**
- * Represents a device model with its properties.
+ * Represents a device with its properties.
  *
  * @property name The name of the device. Default value is "Unknown".
  * @property address The address of the device. Default value is "Unknown".

@@ -95,11 +95,11 @@ fun ExpandableDeviceCard(
                     verticalAlignment = Alignment.CenterVertically,
                     //horizontalArrangement = Arrangement.Center
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_bluetooth_24),
-                        contentDescription = "Bluetooth Icon"
-
-                    )
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.baseline_bluetooth_24),
+//                        contentDescription = "Bluetooth Icon"
+//
+//                    )
                     Text(
                         text = deviceModel.name,
                         style = MaterialTheme.typography.titleSmall,

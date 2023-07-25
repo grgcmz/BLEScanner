@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.grgcmz.blescanner.R
 import com.grgcmz.blescanner.controller.utils.toHex
 import com.grgcmz.blescanner.model.DeviceModel
 import com.grgcmz.blescanner.model.ScanResultAdapter
@@ -38,12 +36,12 @@ fun DeviceCard(deviceModel: DeviceModel) {
             Column() {
 
                 Row() {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_bluetooth_24),
-                        contentDescription = "Bluetooth Icon",
-                        modifier = Modifier.offset(y = 4.dp)
-
-                    )
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.baseline_bluetooth_24),
+//                        contentDescription = "Bluetooth Icon",
+//                        modifier = Modifier.offset(y = 4.dp)
+//
+//                    )
                     Text(
                         text = deviceModel.name,
                         style = MaterialTheme.typography.titleSmall,

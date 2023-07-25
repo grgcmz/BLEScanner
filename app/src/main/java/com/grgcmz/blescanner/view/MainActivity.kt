@@ -184,7 +184,6 @@ class MainActivity : ComponentActivity() {
                                 .padding(top = 8.dp, bottom = 24.dp),
                             onClick = { scanResults.clear() },
                             content = {
-                                // TODO() toggle text
                                 Text("Clear Results")
                             }
                         )

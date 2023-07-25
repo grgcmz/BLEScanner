@@ -11,9 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import timber.log.Timber
 
-@Deprecated("This class is deprecated and it's not needed anymore. Use MultiplePermissionHandler instead, since bluetooth requires multiple permissions in any case. ")
 /**
- * [Deprecated] Handler class for handling permissions related to Bluetooth and Location.
+ * Handler class for handling permissions related to Bluetooth and Location.
  *
  * @property activity The ComponentActivity instance.
  * @property context The Context instance.
@@ -65,7 +64,7 @@ class PermissionHandler (private val activity: ComponentActivity, private val co
     }
 
     /**
-     * [Deprecated] Checks the BLE-related permissions and requests them if necessary.
+     * Checks the BLE-related permissions and requests them if necessary.
      *
      * @param bluetoothAdapter The BluetoothAdapter instance.
      */
